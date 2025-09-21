@@ -28,3 +28,9 @@ export interface CardType {
   rank: Rank;
   suitSymbol: string;
 }
+
+export type FreeCell = CardType | null;
+
+export type FoundationStack = CardType[];
+
+export type TableauStack = CardType[];
