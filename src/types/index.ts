@@ -31,6 +31,8 @@ export interface CardType {
 
 export type FreeCell = CardType | null;
 
-export type FoundationStack = CardType[];
+export type FoundationStack =
+  | { suit: null; stack: [] }
+  | { suit: Suit; stack: CardType[] };
 
 export type TableauStack = CardType[];
