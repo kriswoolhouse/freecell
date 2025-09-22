@@ -10,7 +10,7 @@ export function createFreeCells(): FreeCell[] {
 }
 
 function createFoundation(): FoundationStack {
-  return [];
+  return { suit: null, stack: [] };
 }
 
 export function createFoundations(): FoundationStack[] {
