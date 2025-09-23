@@ -1,5 +1,12 @@
 export type Suit = "hearts" | "diamonds" | "clubs" | "spades";
 
+export const CARD_COLORS: { [key in Suit]: "red" | "black" } = {
+  hearts: "red",
+  diamonds: "red",
+  clubs: "black",
+  spades: "black",
+};
+
 export type Rank =
   | "A"
   | "2"
