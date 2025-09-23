@@ -59,3 +59,8 @@ export type FoundationStack =
   | { suit: Suit; stack: CardType[] };
 
 export type TableauStack = CardType[];
+
+export type MoveDestination =
+  | { type: "tableau"; stackIndex: number }
+  | { type: "freecell"; cellIndex: number }
+  | { type: "foundation"; stackIndex: number };
