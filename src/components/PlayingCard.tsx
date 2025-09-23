@@ -1,4 +1,4 @@
-import { moveCard } from "@/lib/game/gameplay";
+import { moveStack } from "@/lib/game/gameplay";
 import type { CardType } from "@/types";
 
 interface PlayingCardProps {
@@ -13,7 +13,7 @@ export default function PlayingCard({ card, interactive }: PlayingCardProps) {
   return (
     <button
       type="button"
-      onClick={interactive ? () => moveCard() : undefined}
+      onClick={interactive ? () => moveStack() : undefined}
       className={`appearance-none border-none p-0 bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-200 rounded-lg h-fit ${interactive ? "cursor-pointer" : ""}`}
       tabIndex={interactive ? undefined : -1}
     >
