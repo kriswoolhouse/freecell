@@ -3,19 +3,19 @@ import type { CardType } from "@/types";
 
 interface PlayingCardProps {
   card: CardType;
-  interactive: boolean;
+  isInteractive: boolean;
 }
 
-export default function PlayingCard({ card, interactive }: PlayingCardProps) {
+export default function PlayingCard({ card, isInteractive }: PlayingCardProps) {
   const isRed = card.suit === "hearts" || card.suit === "diamonds";
   const cardColour = isRed ? "text-red-400" : "text-black";
 
   return (
     <button
       type="button"
-      onClick={interactive ? () => moveStack() : undefined}
-      className={`appearance-none border-none p-0 bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-200 rounded-lg h-fit ${interactive ? "cursor-pointer" : ""}`}
-      tabIndex={interactive ? undefined : -1}
+      onClick={isInteractive ? () => moveStack() : undefined}
+      className={`appearance-none border-none p-0 bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-200 rounded-lg h-fit ${isInteractive ? "cursor-pointer" : ""}`}
+      tabIndex={isInteractive ? undefined : -1}
     >
       <div
         className={`aspect-[5/7] rounded-lg bg-white border-gray-400 border flex flex-col justify-between items-center py-1 px-2 shadow-md select-none font-bold text-xl ${cardColour}`}

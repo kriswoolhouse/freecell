@@ -10,11 +10,15 @@ export default function Foundations({ foundations }: foundationsProps) {
     <div className="grid gap-2 basis-1/2 grid-flow-col" data-test="foundations">
       {foundations.map((foundation, foundationIndex) =>
         foundation.suit ? (
-          // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
-          <Card key={foundationIndex} card={foundation.stack[-1]} />
+          <Card
+            // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
+            key={foundationIndex}
+            isInteractive={false}
+            card={foundation.stack[-1]}
+          />
         ) : (
           // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
-          <Card key={foundationIndex} card={null} />
+          <Card key={foundationIndex} isInteractive={false} card={null} />
         ),
       )}
     </div>

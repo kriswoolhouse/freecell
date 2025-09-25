@@ -4,6 +4,7 @@ import type { CardType } from "@/types";
 
 interface CardProps {
   card: CardType | null;
+  isInteractive: boolean;
 }
 
 // TODO
@@ -13,9 +14,9 @@ interface CardProps {
 // If !card then interactive = false
 // If card is bottom of stack then interactive = true
 // If card is part of sub-stack then interactive = true
-export default function Card({ card }: CardProps) {
+export default function Card({ card, isInteractive }: CardProps) {
   if (card) {
-    return <PlayingCard interactive={interactive} card={card} />;
+    return <PlayingCard isInteractive={isInteractive} card={card} />;
   }
 
   return <OpenCell />;
