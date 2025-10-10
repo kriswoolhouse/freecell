@@ -4,15 +4,37 @@ import {
   type FoundationStack,
   type FreeCell,
   type MoveDestination,
+  type MoveSource,
   RANK_VALUES,
   type TableauStack,
 } from "@/types";
 
-function isValidMove(
+export function getStackFromMoveSource(
+  moveSource: MoveSource,
+  tableau: TableauStack[],
+  freeCells: FreeCell[],
+): CardType[] {
+  let selectedStack: CardType[];
+
+  switch (moveSource.type) {
+    case "tableau":
+      selectedStack = tableau[moveSource.stackIndex].slice(
+        moveSource.cardIndex,
+      );
+      break;
+
+    case "freecell":
+      selectedStack = freeCells[moveSource.stackIndex];
+  }
+
+  return selectedStack;
+}
+
+export function isValidMove(
   stackToMove: CardType[],
   destination: MoveDestination,
   foundations: FoundationStack[],
-  freecells: FreeCell[],
+  freeCells: FreeCell[],
   tableau: TableauStack[],
 ): boolean {
   if (stackToMove.length === 0) {
@@ -33,11 +55,13 @@ function isValidMove(
       );
 
     case "freecell":
-      return isMovingSingleCard && freecells[destination.cellIndex] === null;
+      return (
+        isMovingSingleCard && freeCells[destination.stackIndex].length === 0
+      );
 
     case "tableau": {
-      const freeCellCount = freecells.reduce((count, freeCell) => {
-        return freeCell === null ? ++count : count;
+      const freeCellCount = freeCells.reduce((count, freeCell) => {
+        return freeCell.length === 0 ? ++count : count;
       }, 0);
 
       let availableEmptyStackCount = tableau.reduce((count, tableauStack) => {
@@ -122,7 +146,7 @@ function canMoveStackToTableauStack(
   const destinationCard = destinationStack[destinationStack.length - 1];
 
   const cardsInCorrectOrder =
-    RANK_VALUES[baseMovingCard.rank] === RANK_VALUES[destinationCard.rank] + 1;
+    RANK_VALUES[destinationCard.rank] === RANK_VALUES[baseMovingCard.rank] + 1;
 
   const cardsOfOppositeColour =
     CARD_COLORS[baseMovingCard.suit] !== CARD_COLORS[destinationCard.suit];
@@ -137,18 +161,77 @@ function getMaxMovableCards(
   return (freeCellCount + 1) * 2 ** availableEmptyStackCount;
 }
 
+// TODO Cards are moving but it's deleting the whole stack
 export function moveStack(
   stackToMove: CardType[],
+  source: MoveSource,
   destination: MoveDestination,
-  foundations: FoundationStack[],
-  freecells: FreeCell[],
-  tableau: TableauStack[],
+  currentState: {
+    tableau: TableauStack[];
+    freeCells: FreeCell[];
+    foundations: FoundationStack[];
+  },
 ) {
-  if (!isValidMove(stackToMove, destination, foundations, freecells, tableau)) {
-    // Shake shake time
-    return;
+  const newTableau = currentState.tableau.map((stack) => [...stack]);
+  const newFreeCells = [...currentState.freeCells];
+  const newFoundations = currentState.foundations.map(
+    (foundation): FoundationStack => {
+      if (foundation.suit === null) {
+        return { suit: null, stack: [] };
+      }
+      return { suit: foundation.suit, stack: [...foundation.stack] };
+    },
+  );
+
+  // 1. Remove stack from source
+  if (source.type === "tableau") {
+    newTableau[source.stackIndex].splice(
+      newTableau[source.stackIndex].length - stackToMove.length,
+    );
+  } else if (source.type === "freecell") {
+    newFreeCells[source.stackIndex].pop();
   }
+
+  // 2. Add stack to bottom of destination
+  if (destination.type === "tableau") {
+    newTableau[destination.stackIndex].push(...stackToMove);
+  } else if (destination.type === "freecell") {
+    newFreeCells[destination.stackIndex] = [stackToMove[0]];
+  } else if (destination.type === "foundation") {
+    const foundation = newFoundations[destination.stackIndex];
+    if (foundation.suit === null) {
+      newFoundations[destination.stackIndex] = {
+        suit: stackToMove[0].suit,
+        stack: stackToMove,
+      };
+    } else {
+      foundation.stack.push(...stackToMove);
+    }
+  }
+
+  return { newTableau, newFreeCells, newFoundations };
 }
 
-// TODO
-// How can I update the state of tableau, freecells & foundations
+export function isStackSelectable(
+  moveSource: MoveSource,
+  selectedStack: CardType[],
+): boolean {
+  return (
+    (moveSource.type === "freecell" && selectedStack.length > 0) ||
+    (moveSource.type === "tableau" && isValidSubStack(selectedStack))
+  );
+}
+
+export function isValidSubStack(subStack: TableauStack): boolean {
+  return subStack.every((card, index, stack) => {
+    if (index === 0) {
+      return true;
+    }
+
+    const previousCard = stack[index - 1];
+    return (
+      RANK_VALUES[previousCard.rank] === RANK_VALUES[card.rank] + 1 &&
+      CARD_COLORS[previousCard.suit] !== CARD_COLORS[card.suit]
+    );
+  });
+}

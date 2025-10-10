@@ -52,7 +52,7 @@ export interface CardType {
   suitSymbol: string;
 }
 
-export type FreeCell = CardType | null;
+export type FreeCell = [CardType] | [];
 
 export type FoundationStack =
   | { suit: null; stack: [] }
@@ -60,7 +60,11 @@ export type FoundationStack =
 
 export type TableauStack = CardType[];
 
+export type MoveSource =
+  | { type: "tableau"; stackIndex: number; cardIndex: number }
+  | { type: "freecell"; stackIndex: number };
+
 export type MoveDestination =
   | { type: "tableau"; stackIndex: number }
-  | { type: "freecell"; cellIndex: number }
+  | { type: "freecell"; stackIndex: number }
   | { type: "foundation"; stackIndex: number };

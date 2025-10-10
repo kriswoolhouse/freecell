@@ -1,20 +1,37 @@
-import { moveStack } from "@/lib/game/gameplay";
-import type { CardType } from "@/types";
+import {
+  CARD_COLORS,
+  type CardType,
+  type MoveDestination,
+  type MoveSource,
+} from "@/types";
 
 interface PlayingCardProps {
   card: CardType;
+  isSelected: boolean;
+  handleStackClick: (
+    moveClicked: MoveSource | MoveDestination,
+    topCardIndex?: number,
+  ) => void;
+  moveData: MoveSource | MoveDestination;
+  cardIndex?: number;
   isInteractive: boolean;
 }
 
-export default function PlayingCard({ card, isInteractive }: PlayingCardProps) {
-  const isRed = card.suit === "hearts" || card.suit === "diamonds";
-  const cardColour = isRed ? "text-red-400" : "text-black";
+export default function PlayingCard({
+  card,
+  isSelected,
+  handleStackClick,
+  moveData,
+  isInteractive,
+}: PlayingCardProps) {
+  const cardColour =
+    CARD_COLORS[card.suit] === "red" ? "text-red-400" : "text-black";
 
   return (
     <button
       type="button"
-      onClick={isInteractive ? () => moveStack() : undefined}
-      className={`appearance-none border-none p-0 bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-200 rounded-lg h-fit ${isInteractive ? "cursor-pointer" : ""}`}
+      onClick={isInteractive ? () => handleStackClick(moveData) : undefined}
+      className={`appearance-none border-none p-0 bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-200 rounded-lg h-fit ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "-translate-y-2" : ""}`}
       tabIndex={isInteractive ? undefined : -1}
     >
       <div

@@ -6,7 +6,7 @@ import type {
 } from "@/types";
 
 export function createFreeCells(): FreeCell[] {
-  return [null, null, null, null];
+  return [[], [], [], []];
 }
 
 function createFoundation(): FoundationStack {

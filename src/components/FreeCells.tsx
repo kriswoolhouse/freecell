@@ -1,17 +1,36 @@
 import Card from "@/components/Card";
-import type { FreeCell } from "@/types";
+import type { FreeCell, MoveDestination, MoveSource } from "@/types";
 
 interface freeCellsProps {
   freeCells: FreeCell[];
+  alreadySelectedSource: MoveSource | null;
+  handleStackClick: (moveClicked: MoveSource | MoveDestination) => void;
 }
 
-export default function FreeCells({ freeCells }: freeCellsProps) {
+export default function FreeCells({
+  freeCells,
+  alreadySelectedSource,
+  handleStackClick,
+}: freeCellsProps) {
   return (
     <div className="grid gap-2 basis-1/2 grid-flow-col" data-test="freecells">
-      {freeCells.map((freeCell, freeCellIndex) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of free cells>
-        <Card key={freeCellIndex} isInteractive={true} card={freeCell} />
-      ))}
+      {freeCells.map((freeCell, freeCellIndex) => {
+        const isSelected =
+          alreadySelectedSource?.type === "freecell" &&
+          alreadySelectedSource?.stackIndex === freeCellIndex;
+
+        return (
+          <Card
+            // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of free cells>
+            key={freeCellIndex}
+            isInteractive={true}
+            card={freeCell[0] ?? null}
+            isSelected={isSelected}
+            handleStackClick={handleStackClick}
+            moveData={{ type: "freecell", stackIndex: freeCellIndex }}
+          />
+        );
+      })}
     </div>
   );
 }
