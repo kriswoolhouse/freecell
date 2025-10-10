@@ -19,6 +19,7 @@ export default function Foundations({
           key={foundationIndex}
           isInteractive={false}
           card={foundation.stack[-1] ?? null}
+          isSelected={false}
           handleStackClick={handleStackClick}
           moveData={{ type: "foundation", stackIndex: foundationIndex }}
         />
