@@ -18,13 +18,15 @@ export function getStackFromMoveSource(
 
   switch (moveSource.type) {
     case "tableau":
-      selectedStack = tableau[moveSource.stackIndex].slice(
-        moveSource.cardIndex,
-      );
+      selectedStack = tableau[moveSource.stackIndex]
+        .slice(moveSource.cardIndex)
+        .map((card) => ({ ...card }));
       break;
 
     case "freecell":
-      selectedStack = freeCells[moveSource.stackIndex];
+      selectedStack = freeCells[moveSource.stackIndex].map((card) => ({
+        ...card,
+      }));
   }
 
   return selectedStack;
@@ -161,7 +163,6 @@ function getMaxMovableCards(
   return (freeCellCount + 1) * 2 ** availableEmptyStackCount;
 }
 
-// TODO Cards are moving but it's deleting the whole stack
 export function moveStack(
   stackToMove: CardType[],
   source: MoveSource,

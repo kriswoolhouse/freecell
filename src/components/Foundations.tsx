@@ -10,7 +10,6 @@ export default function Foundations({
   foundations,
   handleStackClick,
 }: foundationsProps) {
-  // TODO Handle click of empty foundations, empty freecells, open stacks
   return (
     <div className="grid gap-2 basis-1/2 grid-cols-4" data-test="foundations">
       {foundations.map((foundation, foundationIndex) => (
