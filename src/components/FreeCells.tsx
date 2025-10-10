@@ -13,7 +13,7 @@ export default function FreeCells({
   handleStackClick,
 }: freeCellsProps) {
   return (
-    <div className="grid gap-2 basis-1/2 grid-flow-col" data-test="freecells">
+    <div className="grid gap-2 basis-1/2 grid-cols-4" data-test="freecells">
       {freeCells.map((freeCell, freeCellIndex) => {
         const isSelected =
           alreadySelectedSource?.type === "freecell" &&

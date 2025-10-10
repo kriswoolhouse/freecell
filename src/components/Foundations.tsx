@@ -12,7 +12,7 @@ export default function Foundations({
 }: foundationsProps) {
   // TODO Handle click of empty foundations, empty freecells, open stacks
   return (
-    <div className="grid gap-2 basis-1/2 grid-flow-col" data-test="foundations">
+    <div className="grid gap-2 basis-1/2 grid-cols-4" data-test="foundations">
       {foundations.map((foundation, foundationIndex) => (
         <Card
           // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
