@@ -16,8 +16,8 @@ export default function Foundations({
         <Card
           // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
           key={foundationIndex}
-          isInteractive={false}
-          card={foundation.stack[-1] ?? null}
+          isInteractive={true}
+          card={foundation.stack.at(-1) ?? null}
           isSelected={false}
           handleStackClick={handleStackClick}
           moveData={{ type: "foundation", stackIndex: foundationIndex }}

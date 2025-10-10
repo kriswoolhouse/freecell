@@ -43,12 +43,10 @@ export function isValidMove(
     return false;
   }
 
-  const isMovingSingleCard = stackToMove.length === 1;
-
   switch (destination.type) {
     case "foundation":
       return (
-        isMovingSingleCard &&
+        stackToMove.length === 1 &&
         canMoveCardToFoundation(
           stackToMove[0],
           foundations,
@@ -58,7 +56,8 @@ export function isValidMove(
 
     case "freecell":
       return (
-        isMovingSingleCard && freeCells[destination.stackIndex].length === 0
+        stackToMove.length === 1 &&
+        freeCells[destination.stackIndex].length === 0
       );
 
     case "tableau": {
@@ -95,33 +94,30 @@ function canMoveCardToFoundation(
 ): boolean {
   const targetFoundation = foundations[destinationIndex];
   const targetStack = targetFoundation.stack;
-  const foundationTopCard = targetStack[targetStack.length - 1];
 
-  // Moving Ace to free foundation
-  // AH -> F:0
-  const doesntHaveFoundationForSuit = foundations.every(
+  const foundationForSuitExists = foundations.some(
     (foundation, foundationIndex) => {
       return (
         destinationIndex !== foundationIndex &&
-        cardToMove.suit !== foundation.suit
+        cardToMove.suit === foundation.suit
       );
     },
   );
 
-  const movingAceToEmptyFoundation =
-    doesntHaveFoundationForSuit &&
-    cardToMove.rank === "A" &&
-    targetFoundation.suit === null;
+  if (foundationForSuitExists) {
+    return false;
+  }
 
-  // Moving non-Ace on top of correct existing foundation
-  // 3H -> F:2H
-  const cardIsSameSuit = cardToMove.suit === targetFoundation.suit;
-  const cardProceedsDestination =
-    RANK_VALUES[cardToMove.rank] === RANK_VALUES[foundationTopCard.rank] + 1;
-  const correctlyMovingCardToFoundation =
-    cardIsSameSuit && cardProceedsDestination;
+  if (targetStack.length === 0) {
+    return cardToMove.rank === "A";
+  } else {
+    const cardIsSameSuit = cardToMove.suit === targetFoundation.suit;
+    const cardProceedsDestination =
+      RANK_VALUES[targetStack[targetStack.length - 1].rank] ===
+      RANK_VALUES[cardToMove.rank] - 1;
 
-  return movingAceToEmptyFoundation || correctlyMovingCardToFoundation;
+    return cardIsSameSuit && cardProceedsDestination;
+  }
 }
 
 function canMoveStackToTableauStack(
