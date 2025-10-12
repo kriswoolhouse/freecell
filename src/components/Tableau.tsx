@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import OpenCell from "@/components/OpenCell";
 import type { MoveDestination, MoveSource, TableauStack } from "@/types";
 
 interface TableauProps {
@@ -17,29 +18,36 @@ export default function Tableau({
       {tableau.map((stack, stackIndex) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
         <div key={stackIndex} className="grid grid-cols-1 auto-rows-[2rem]">
-          {stack.map((card, cardIndex) => {
-            // TODO Work out if card is interactive
-            const isInteractive = true;
-            const isSelected =
-              alreadySelectedSource?.type === "tableau" &&
-              alreadySelectedSource?.stackIndex === stackIndex &&
-              alreadySelectedSource?.cardIndex <= cardIndex;
+          {stack.length ? (
+            stack.map((card, cardIndex) => {
+              // TODO Work out if card is interactive
+              const isInteractive = true;
+              const isSelected =
+                alreadySelectedSource?.type === "tableau" &&
+                alreadySelectedSource?.stackIndex === stackIndex &&
+                alreadySelectedSource?.cardIndex <= cardIndex;
 
-            return (
-              <Card
-                key={card.id}
-                isInteractive={isInteractive}
-                card={card}
-                isSelected={isSelected}
-                handleStackClick={handleStackClick}
-                moveData={{
-                  type: "tableau",
-                  stackIndex: stackIndex,
-                  cardIndex: cardIndex,
-                }}
-              />
-            );
-          })}
+              return (
+                <Card
+                  key={card.id}
+                  isInteractive={isInteractive}
+                  card={card}
+                  isSelected={isSelected}
+                  handleStackClick={handleStackClick}
+                  moveData={{
+                    type: "tableau",
+                    stackIndex: stackIndex,
+                    cardIndex: cardIndex,
+                  }}
+                />
+              );
+            })
+          ) : (
+            <OpenCell
+              handleStackClick={handleStackClick}
+              moveData={{ type: "tableau", stackIndex: stackIndex }}
+            />
+          )}
         </div>
       ))}
     </div>
