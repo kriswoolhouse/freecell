@@ -1,11 +1,8 @@
 import type { MoveDestination, MoveSource } from "@/types";
 
 interface OpenCellProps {
-  handleStackClick: (
-    moveClicked: MoveSource | MoveDestination,
-    topCardIndex?: number,
-  ) => void;
-  moveData: MoveSource | MoveDestination;
+  handleStackClick: (moveClicked: MoveSource | MoveDestination) => void;
+  moveData: MoveDestination;
 }
 
 export default function OpenCell({
