@@ -14,17 +14,7 @@ export default function Foundations({
   return (
     <div className="grid gap-2 basis-1/2 grid-cols-4" data-test="foundations">
       {foundations.map((foundation, foundationIndex) => {
-        return foundation.stack.length ? (
-          <Card
-            // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
-            key={foundationIndex}
-            isInteractive={true}
-            card={foundation.stack[-1]}
-            isSelected={false}
-            handleStackClick={handleStackClick}
-            moveData={{ type: "foundation", stackIndex: foundationIndex }}
-          />
-        ) : (
+        return foundation.stack.length === 0 ? (
           <OpenCell
             // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
             key={foundationIndex}
@@ -33,6 +23,16 @@ export default function Foundations({
               type: "foundation",
               stackIndex: foundationIndex,
             }}
+          />
+        ) : (
+          <Card
+            // biome-ignore lint/suspicious/noArrayIndexKey: <Fixed number of stacks>
+            key={foundationIndex}
+            isInteractive={true}
+            card={foundation.stack[foundation.stack.length - 1]}
+            isSelected={false}
+            handleStackClick={handleStackClick}
+            moveData={{ type: "foundation", stackIndex: foundationIndex }}
           />
         );
       })}
